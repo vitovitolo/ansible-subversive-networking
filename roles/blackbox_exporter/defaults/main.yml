@@ -1,2 +1,0 @@
----
-node_exporter_tarball_url: "https://gitlab.otters.xyz/product/systems/thirdparty/node-exporter/-/jobs/{{ node_exporter_revision }}/artifacts/raw/node_exporter.linux-amd64.tar.gz"
