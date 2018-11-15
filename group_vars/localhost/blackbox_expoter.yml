@@ -1,0 +1,6 @@
+---
+blackbox_exporter_version:           "0.12.0"
+blackbox_exporter_port:              "9101"
+blackbox_exporter_opts:              "--web.listen-address=0.0.0.0:{{ blackbox_exporter_port }}"
+blackbox_exporter_dir:               "/opt/blackbox_exporter"
+blackbox_exporter_tarball_url:       "https://github.com/prometheus/blackbox_exporter/releases/download/v{{ blackbox_exporter_version }}/blackbox_exporter-{{ blackbox_exporter_version }}.linux-{{ ansible_architecture }}.tar.gz"

@@ -1,0 +1,6 @@
+---
+- name: Ensure that node_exporter is started and enabled at boot
+  service:
+    name: node_exporter
+    state: started
+    enabled: yes

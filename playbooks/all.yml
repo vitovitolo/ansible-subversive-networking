@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  roles:
+    - { role: node_exporter, tags: node_exporter }
+    - { role: blackbox_exporter, tags: blackbox_exporter }
