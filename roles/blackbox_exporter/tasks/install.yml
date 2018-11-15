@@ -1,0 +1,50 @@
+---
+- name: Create the data directory
+  file:
+    path: "{{ blackbox_exporter_dir }}"
+    state: directory
+
+- name: Check the blackbox_exporter version currently installed
+  shell: '{{ blackbox_exporter_dir }}/blackbox_exporter --version 2>&1 | head -1 | grep -o {{ blackbox_exporter_version }}'
+  changed_when: false
+  check_mode: no
+  ignore_errors: yes
+  register: blackbox_exporter_installed_version
+
+- block:
+  - name: Create a temporary directory to unpack the blackbox_exporter tarball
+    file:
+      path: "/tmp/blackbox_exporter_{{ blackbox_exporter_version }}"
+      state: directory
+
+  - name: Download the blackbox_exporter binary
+    get_url:
+      url: "{{ blackbox_exporter_tarball_url }}"
+      dest: /tmp/
+    register: blackbox_exporter_download
+
+  - name: Untar the blackbox_exporter tarball
+    unarchive:
+      src: "{{ blackbox_exporter_download.dest }}"
+      dest: "/tmp/blackbox_exporter_{{ blackbox_exporter_version }}"
+      copy: no
+
+  - name: Replace the blackbox_exporter binary
+    copy:
+      src: "/tmp/blackbox_exporter_{{ blackbox_exporter_version }}/blackbox_exporter"
+      dest: "{{ blackbox_exporter_dir }}/blackbox_exporter"
+      remote_src: yes
+      mode: 0755
+    notify: restart blackbox_exporter
+
+  - name: Clean up the blackbox_exporter install files
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - "/tmp/blackbox_exporter_{{ blackbox_exporter_version }}"
+      - "{{ blackbox_exporter_download.dest }}"
+
+  when:
+    - blackbox_exporter_installed_version.rc != 0
+    - not ansible_check_mode

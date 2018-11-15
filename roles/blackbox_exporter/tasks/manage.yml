@@ -1,0 +1,6 @@
+---
+- name: Ensure that blackbox_exporter is started and enabled at boot
+  service:
+    name: blackbox_exporter
+    state: started
+    enabled: yes
